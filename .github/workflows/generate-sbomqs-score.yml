@@ -14,7 +14,12 @@ jobs:
 
     steps:
       - name: checkout-repository
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
+
+      - name: checkout-new-branch
+        run: |
+          git checkout -b ae-runner-sbomqs
+          git pull origin main
 
       - name: install-sbomqs
         run: |
@@ -27,3 +32,15 @@ jobs:
             output_file="${json_file%.json}.txt"
             sbomqs score "$json_file" > "$output_file"
           done
+
+      - name: commit-sbomqs-files
+        run: |
+          git config --local user.name "ae-actions-runner"
+          git config --local user.email "ae-actions-runner@metaeffekt.com"
+          git add *.txt
+          git commit -m "Actions runner added sbomqs scores."
+          git push --set-upstream origin ae-runner-sbomqs
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          
+
