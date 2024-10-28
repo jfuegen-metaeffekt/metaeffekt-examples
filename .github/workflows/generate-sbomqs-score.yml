@@ -7,8 +7,9 @@ on:
   pull_request:
     branches:
       - main
-  workflow_dispatch: 
-  
+  workflow_dispatch:
+
+
 jobs:
   sbomqs-score:
     runs-on: ubuntu-latest
@@ -30,7 +31,7 @@ jobs:
       - name: run-sbomqs-score
         run: |
           find . -type f -name "*.json" | while read json_file; do
-            output_file="${json_file%.json}.txt"
+            output_file="${json_file%.json}-sbomqs.txt"
             sbomqs score "$json_file" > "$output_file"
           done
 
